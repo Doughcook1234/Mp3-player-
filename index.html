@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Music</title>
+<style>
+:root{--bg:#0b0b0d;--panel:#19191d;--panel2:#29292f;--text:#f7f7f8;--muted:#a1a1aa;--accent:#fa2d48}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}button{cursor:pointer;border:0;color:inherit;background:transparent}.app{max-width:1100px;margin:auto;padding:22px 18px 125px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px}.logo{display:grid;place-items:center;background:var(--accent);width:38px;height:38px;border-radius:12px}
+.add{background:var(--accent);padding:11px 16px;border-radius:22px;font-weight:700;color:white;cursor:pointer}#fileInput{display:none}
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px}aside{padding:12px 0}aside h3{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin:0 0 12px 10px}
+.nav{width:100%;text-align:left;padding:12px;border-radius:10px;color:#c8c8ce;margin-bottom:4px}.nav.active,.nav:hover{background:var(--panel2);color:white}
+.nav span{display:inline-block;width:27px}.hero{background:linear-gradient(120deg,#39212a,#20171c 55%,#24242b);border-radius:20px;padding:26px;margin-bottom:24px;display:flex;align-items:center;gap:20px;min-height:170px}
+.hero-art{width:115px;height:115px;flex:none;border-radius:16px;background:linear-gradient(145deg,#fa2d48,#8c1644);display:grid;place-items:center;font-size:48px;box-shadow:0 8px 28px #0006}
+.eyebrow{color:#ff9aa8;text-transform:uppercase;letter-spacing:1.5px;font-size:11px;font-weight:800}.hero h1{font-size:clamp(27px,4vw,40px);margin:7px 0}.hero p{margin:0;color:#d1c5ca}
+.tools{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}.search{flex:1;min-width:170px;background:var(--panel);border:1px solid #303036;border-radius:12px;padding:12px 14px;color:white;outline:none}.search:focus{border-color:#777}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}.section-head h2{font-size:21px;margin:0}.muted{color:var(--muted);font-size:13px}
+.track-list{background:var(--panel);border:1px solid #29292f;border-radius:14px;overflow:hidden}.track{display:grid;grid-template-columns:32px 46px minmax(0,1fr) 64px 110px;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid #2b2b30}.track:last-child{border-bottom:0}.track:hover,.track.playing{background:#28282e}
+.index{color:var(--muted);text-align:center}.cover{width:46px;height:46px;border-radius:8px;background:linear-gradient(140deg,#41414a,#222229);display:grid;place-items:center;font-size:20px;overflow:hidden}
+.track-title{font-weight:650;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.track-sub{font-size:12px;color:var(--muted);margin-top:4px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.duration{color:var(--muted);font-size:13px;text-align:right}.track-actions{display:flex;justify-content:flex-end;gap:4px}.icon-btn{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:17px}.icon-btn:hover{background:#3a3a42}.play-small{background:#383840}
+.empty{padding:42px 20px;text-align:center;color:var(--muted)}.empty strong{display:block;color:white;margin-bottom:7px}.drop{margin-top:16px;border:1px dashed #44444d;border-radius:13px;padding:15px;text-align:center;color:var(--muted);font-size:13px}.drop.drag{border-color:var(--accent);background:#26191d}
+.player{position:fixed;z-index:10;bottom:0;left:0;right:0;background:#17171bf2;backdrop-filter:blur(20px);border-top:1px solid #34343a;padding:12px 20px}.player-inner{max-width:1100px;margin:auto;display:grid;grid-template-columns:minmax(150px,1fr) minmax(220px,1.2fr) minmax(150px,1fr);gap:18px;align-items:center}
+.now{display:flex;align-items:center;gap:10px;min-width:0}.now .cover{width:48px;height:48px;flex:none}.nowtext{min-width:0}.now-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.now-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.controls{display:flex;align-items:center;justify-content:center;gap:16px}.control{font-size:20px;color:#ddd}.control.main{background:white;color:#111;width:42px;height:42px;border-radius:50%;font-size:19px}.control.active{color:#ff6074}
+.progress{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:11px;margin-top:6px}.progress input{width:100%;accent-color:var(--accent);cursor:pointer}.right-controls{display:flex;align-items:center;justify-content:flex-end;gap:10px;color:var(--muted)}.right-controls input{width:90px;accent-color:var(--accent)}
+@media(max-width:720px){.layout{grid-template-columns:1fr}.sidebar{display:flex;gap:6px;overflow:auto;padding:0 0 10px}.sidebar h3{display:none}.nav{white-space:nowrap;width:auto;margin:0}.hero{padding:18px;min-height:140px}.hero-art{width:82px;height:82px;font-size:36px}.track{grid-template-columns:22px 38px minmax(0,1fr) 76px;gap:7px;padding:9px}.cover{width:38px;height:38px}.duration{display:none}.track-actions{grid-column:4;grid-row:1}.track-actions .move{display:none}.player{padding:10px 12px}.player-inner{grid-template-columns:minmax(0,1fr) auto;gap:8px}.controls{grid-column:2;grid-row:1;gap:9px}.control{font-size:17px}.control.main{width:38px;height:38px}.right-controls{display:none}.progress{grid-column:1/-1;margin:0}.now .cover{width:40px;height:40px}.app{padding:16px 12px 125px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand"><div class="logo">♫</div> My Music</div><label class="add">＋ Add Music<input id="fileInput" type="file" accept="audio/*,.mp3" multiple></label></header>
+<div class="layout">
+<aside class="sidebar"><h3>Library</h3><button class="nav active" data-filter="all"><span>♫</span>All Songs</button><button class="nav" data-filter="favorites"><span>♡</span>Favorites</button><button class="nav" data-filter="recent"><span>◷</span>Recently Added</button></aside>
+<main>
+<section class="hero"><div class="hero-art">♫</div><div><div class="eyebrow">Your personal library</div><h1>Music, your way.</h1><p>Add your own audio files and build a playlist.</p></div></section>
+<div class="tools"><input class="search" id="search" type="search" placeholder="⌕  Search songs or artists…"><button class="add" id="playAll">▶ Play All</button><button class="nav" id="shuffle">⤨ Shuffle</button></div>
+<div class="section-head"><h2 id="sectionTitle">All Songs</h2><span id="count" class="muted">0 songs</span></div>
+<div class="track-list" id="tracks"><div class="empty"><strong>Your library is waiting</strong>Add audio files to start listening.</div></div>
+<div class="drop" id="drop">Or drag and drop audio files here.</div>
+</main></div></div>
+<div class="player"><div class="player-inner">
+<div class="now"><div class="cover" id="nowCover">♫</div><div class="nowtext"><div class="now-title" id="nowTitle">Choose a song</div><div class="now-sub" id="nowArtist">Nothing playing yet</div></div></div>
+<div><div class="controls"><button class="control" id="shufflePlayer" title="Shuffle">⤨</button><button class="control" id="prev" title="Previous song">⏮</button><button class="control main" id="toggle" title="Play">▶</button><button class="control" id="next" title="Next song">⏭</button><button class="control" id="repeat" title="Repeat">↻</button></div><div class="progress"><span id="elapsed">0:00</span><input id="seek" type="range" min="0" max="1000" value="0"><span id="total">0:00</span></div></div>
+<div class="right-controls"><span>🔊</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8"></div>
+</div><audio id="audio"></audio></div>
+<script>
+const $=id=>document.getElementById(id),audio=$('audio'),fileInput=$('fileInput'),list=$('tracks');
+let songs=[],currentId=null,filter='all',query='',shuffleOn=false,repeatMode=0,queue=[],queuePos=0;
+function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
+function fmt(s){if(!Number.isFinite(s)||s<0)return '0:00';return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0')}
+function prettyName(name){return name.replace(/\.[^.]+$/,'').replace(/[_]+/g,' ').trim()}
+function parseMeta(file){let name=prettyName(file.name),bits=name.split(' - ');return{title:bits.length>1?bits.slice(1).join(' - '):name,artist:bits.length>1?bits[0]:'Local audio file'}}
+function addFiles(files){let n=0;for(const file of [...files]){if(!file.type.startsWith('audio/')&&!/\.(mp3|m4a|aac|wav|ogg|flac|opus)$/i.test(file.name))continue;songs.push({id:uid(),file,url:URL.createObjectURL(file),...parseMeta(file),favorite:false,added:Date.now()+n++})}queue=songs.map(s=>s.id);render()}
+function currentSong(){return songs.find(s=>s.id===currentId)}
+function visibleSongs(){let a=[...songs];if(filter==='favorites')a=a.filter(s=>s.favorite);if(filter==='recent')a.sort((x,y)=>y.added-x.added);if(query){let q=query.toLowerCase();a=a.filter(s=>(s.title+' '+s.artist+' '+s.file.name).toLowerCase().includes(q))}return a}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){let a=visibleSongs();$('count').textContent=a.length+' song'+(a.length===1?'':'s');list.innerHTML='';if(!a.length){list.innerHTML='<div class="empty"><strong>'+(songs.length?'No matching songs':'Your library is waiting')+'</strong>'+(songs.length?'Try another search or view All Songs.':'Add audio files to start listening.')+'</div>';return}
+a.forEach((s,i)=>{let active=s.id===currentId,row=document.createElement('div');row.className='track'+(active?' playing':'');row.innerHTML=`<div class="index">${active?'♫':i+1}</div><div class="cover">${active?'🎵':s.favorite?'♥':'♫'}</div><div style="min-width:0"><div class="track-title" title="${esc(s.title)}">${esc(s.title)}</div><div class="track-sub">${esc(s.artist)}${s.favorite?' · Favorite':''}</div></div><div class="duration">${active?fmt(audio.currentTime):'—:—'}</div><div class="track-actions"><button class="icon-btn play-small" title="Play">${active&&!audio.paused?'Ⅱ':'▶'}</button><button class="icon-btn" title="Favorite">${s.favorite?'♥':'♡'}</button><button class="icon-btn move" title="Remove">×</button></div>`;
+let b=row.querySelectorAll('button');b[0].onclick=()=>active?toggle():playSong(s.id,a.map(x=>x.id));b[1].onclick=()=>{s.favorite=!s.favorite;render()};b[2].onclick=()=>removeSong(s.id);row.ondblclick=e=>{if(e.target.tagName!=='BUTTON')playSong(s.id,a.map(x=>x.id))};list.appendChild(row)})}
+function playSong(id,ids){let s=songs.find(x=>x.id===id);if(!s)return;if(ids)queue=[...ids];else if(!queue.includes(id))queue=songs.map(x=>x.id);queuePos=queue.indexOf(id);if(queuePos<0){queue.push(id);queuePos=queue.length-1}currentId=id;audio.src=s.url;audio.load();audio.play().catch(()=>{});$('nowTitle').textContent=s.title;$('nowArtist').textContent=s.artist;$('nowCover').textContent='♫';$('toggle').textContent='Ⅱ';render()}
+function toggle(){if(!currentSong()){let a=visibleSongs();if(a[0])playSong(a[0].id,a.map(s=>s.id));return}if(audio.paused){audio.play().catch(()=>{});$('toggle').textContent='Ⅱ'}else{audio.pause();$('toggle').textContent='▶'}render()}
+function nextSong(){if(!queue.length)queue=songs.map(s=>s.id);if(!queue.length)return;if(shuffleOn&&queue.length>1){let p=queuePos;while(p===queuePos)p=Math.floor(Math.random()*queue.length);queuePos=p}else queuePos++;if(queuePos>=queue.length){if(repeatMode===1||repeatMode===2)queuePos=0;else{queuePos=0;audio.pause();$('toggle').textContent='▶';return}}let id=queue[queuePos];if(songs.some(s=>s.id===id))playSong(id,queue)}
+function prevSong(){if(audio.currentTime>3){audio.currentTime=0;return}if(!queue.length)return;queuePos=queuePos<=0?queue.length-1:queuePos-1;let id=queue[queuePos];if(songs.some(s=>s.id===id))playSong(id,queue)}
+function removeSong(id){let s=songs.find(x=>x.id===id);if(!s)return;let was=id===currentId;URL.revokeObjectURL(s.url);songs=songs.filter(x=>x.id!==id);queue=queue.filter(x=>x!==id);if(was){audio.pause();audio.removeAttribute('src');currentId=null;$('nowTitle').textContent='Choose a song';$('nowArtist').textContent='Nothing playing yet';$('toggle').textContent='▶'}render()}
+function setFilter(f){filter=f;document.querySelectorAll('.nav[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));$('sectionTitle').textContent={all:'All Songs',favorites:'Favorites',recent:'Recently Added'}[f];render()}
+fileInput.onchange=e=>{addFiles(e.target.files);fileInput.value=''};document.querySelectorAll('.nav[data-filter]').forEach(b=>b.onclick=()=>setFilter(b.dataset.filter));
+$('search').oninput=e=>{query=e.target.value;render()};$('playAll').onclick=()=>{let a=visibleSongs();if(a[0])playSong(a[0].id,a.map(s=>s.id))};
+function toggleShuffle() {shuffleOn=!shuffleOn;$('shuffle').classList.toggle('active',shuffleOn);$('shufflePlayer').classList.toggle('active',shuffleOn)}
+$('shuffle').onclick=$('shufflePlayer').onclick=toggleShuffle;$('prev').onclick=prevSong;$('next').onclick=nextSong;$('toggle').onclick=toggle;
+$('repeat').onclick=()=>{repeatMode=(repeatMode+1)%3;$('repeat').classList.toggle('active',repeatMode>0);$('repeat').textContent=repeatMode===2?'↻¹':'↻';$('repeat').title=['Repeat off','Repeat all','Repeat one'][repeatMode]};
+audio.onended=()=>{if(repeatMode===2){audio.currentTime=0;audio.play().catch(()=>{})}else nextSong()};
+audio.onplay=()=>{$('toggle').textContent='Ⅱ';render()};audio.onpause=()=>{$('toggle').textContent='▶';render()};audio.onloadedmetadata=()=>{$('total').textContent=fmt(audio.duration)};
+audio.ontimeupdate=()=>{$('elapsed').textContent=fmt(audio.currentTime);$('total').textContent=fmt(audio.duration);if(Number.isFinite(audio.duration))$('seek').value=audio.currentTime/audio.duration*1000;let d=document.querySelector('.track.playing .duration');if(d)d.textContent=fmt(audio.currentTime)};
+$('seek').oninput=()=>{if(Number.isFinite(audio.duration))audio.currentTime=Number($('seek').value)/1000*audio.duration};$('volume').oninput=()=>audio.volume=Number($('volume').value);audio.volume=.8;
+let drop=$('drop');['dragenter','dragover'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('drag')}));['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('drag')}));drop.ondrop=e=>{e.preventDefault();addFiles(e.dataTransfer.files)};render();
+</script></body></html>
